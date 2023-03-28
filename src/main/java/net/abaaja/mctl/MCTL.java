@@ -1,5 +1,7 @@
-package com.example.examplemod;
+package net.abaaja.mctl;
 
+import net.abaaja.mctl.block.ModBlocks;
+import net.abaaja.mctl.item.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,6 +20,9 @@ public class MCTL {
   
     public MCTL() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
