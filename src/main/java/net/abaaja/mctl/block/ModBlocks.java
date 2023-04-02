@@ -1,12 +1,15 @@
 package net.abaaja.mctl.block;
 
 import net.abaaja.mctl.MCTL;
+import net.abaaja.mctl.block.custom.TurtleBlock;
 import net.abaaja.mctl.item.ModCreativeModeTab;
 import net.abaaja.mctl.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,9 +23,10 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, MCTL.MOD_ID);
 
-    public static final RegistryObject<Block> Turtle = registerBlock("turtle", ()-> new Block(BlockBehaviour.Properties
+    public static final RegistryObject<TurtleBlock> Turtle = registerBlock("turtle", ()-> new TurtleBlock(BlockBehaviour.Properties
             .of(Material.METAL)
             .strength(3f)), ModCreativeModeTab.MCTL_TAB);
+
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){
         RegistryObject<T> toReturn = BLOCKS.register(name,block);
