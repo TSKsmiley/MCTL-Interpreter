@@ -19,6 +19,10 @@ public class TurtleBlock extends Block {
         return SHAPE;
     }
 
+    /*public moveForward(){
+        this.
+    }*/
+
     /*@Override
     public VoxelShape getCollisionShape(BlockState p_60572_, BlockGetter p_60573_, BlockPos p_60574_, CollisionContext p_60575_) {
         return SHAPE;

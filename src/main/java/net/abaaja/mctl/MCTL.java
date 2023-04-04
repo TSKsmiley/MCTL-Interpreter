@@ -1,8 +1,11 @@
 package net.abaaja.mctl;
 
 import net.abaaja.mctl.block.ModBlocks;
+import net.abaaja.mctl.entity.ModEntityTypes;
 import net.abaaja.mctl.item.ModItems;
+import net.abaaja.mctl.entity.client.TurtleRenderer;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -11,6 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MCTL.MOD_ID)
@@ -23,6 +27,10 @@ public class MCTL {
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+
+        ModEntityTypes.register(modEventBus);
+
+        GeckoLib.initialize();
 
         modEventBus.addListener(this::commonSetup);
 
@@ -39,6 +47,7 @@ public class MCTL {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
 
+            EntityRenderers.register(ModEntityTypes.TURTLE.get(), TurtleRenderer::new);
         }
     }
 }
