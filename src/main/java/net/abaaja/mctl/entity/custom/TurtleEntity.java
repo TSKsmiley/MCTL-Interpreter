@@ -4,11 +4,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -23,7 +23,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
 
-public class TurtleEntity extends Mob implements IAnimatable {
+public class TurtleEntity extends LivingEntity implements IAnimatable {
     private AnimationFactory factory = createFactory(this);
     public TurtleEntity(EntityType<? extends Mob> entity, Level level) {
 
@@ -37,9 +37,9 @@ public class TurtleEntity extends Mob implements IAnimatable {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
+    public InteractionResult interact(Player player, InteractionHand interactionHand) {
         // skip custom logic if the player is not using the main hand
-        if (interactionHand != InteractionHand.MAIN_HAND) return super.mobInteract(player, interactionHand);
+        if (interactionHand != InteractionHand.MAIN_HAND) return super.interact(player, interactionHand);
         // TODO: Remove testing code
 
         player.sendSystemMessage(Component.literal("test"));
@@ -48,9 +48,8 @@ public class TurtleEntity extends Mob implements IAnimatable {
         } else {
             this.turnRight();
         }
-        return super.mobInteract(player, interactionHand);
+        return super.interact(player, interactionHand);
     }
-
 
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> Event){
         if (Event.isMoving()){
@@ -79,6 +78,22 @@ public class TurtleEntity extends Mob implements IAnimatable {
     }
 
     @Override
+    public Iterable<ItemStack> getArmorSlots() {
+        return null;
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot p_21127_) {
+        return null;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {
+
+    }
+
+
+    @Override
     public boolean canDrownInFluidType(FluidType type) {
         return false;
     }
@@ -96,8 +111,18 @@ public class TurtleEntity extends Mob implements IAnimatable {
             this.setPos(x,y,z);
         }
     }
+    // make the entity rotation snap to 90 degree increments
+    @Override
+    public void setYBodyRot(float p_21333_) {
+        // round to closest 90 degree increment
+        float angle = Math.round(p_21333_ / 90) * 90;
+        super.setYBodyRot(angle);
+    }
 
-    // make the entity immovable by pistons
+    @Override
+    public HumanoidArm getMainArm() {
+        return null;
+    }
 
 
     @Override
@@ -122,13 +147,13 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
     public void turnRight(){
         // turn the entity right
-        this.yBodyRot += 90;
+        setYRot(yBodyRot+90);
 
     }
 
     public void turnLeft(){
         // turn the entity left 90 degrees
-        this.yBodyRot -= 90;
+        setYRot(yBodyRot-90);
 
     }
 

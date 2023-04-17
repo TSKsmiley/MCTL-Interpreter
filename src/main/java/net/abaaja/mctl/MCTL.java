@@ -1,6 +1,7 @@
 package net.abaaja.mctl;
 
 import net.abaaja.mctl.block.ModBlocks;
+import net.abaaja.mctl.command.ModCommands;
 import net.abaaja.mctl.entity.ModEntityTypes;
 import net.abaaja.mctl.item.ModItems;
 import net.abaaja.mctl.entity.client.TurtleRenderer;
@@ -33,6 +34,7 @@ public class MCTL {
         GeckoLib.initialize();
 
         modEventBus.addListener(this::commonSetup);
+
 
         MinecraftForge.EVENT_BUS.register(this);
     }
