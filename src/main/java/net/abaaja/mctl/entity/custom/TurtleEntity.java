@@ -23,7 +23,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
 
-public class TurtleEntity extends LivingEntity implements IAnimatable {
+public class TurtleEntity extends Mob implements IAnimatable {
     private AnimationFactory factory = createFactory(this);
     public TurtleEntity(EntityType<? extends Mob> entity, Level level) {
 
@@ -37,9 +37,9 @@ public class TurtleEntity extends LivingEntity implements IAnimatable {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand interactionHand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
         // skip custom logic if the player is not using the main hand
-        if (interactionHand != InteractionHand.MAIN_HAND) return super.interact(player, interactionHand);
+        if (interactionHand != InteractionHand.MAIN_HAND) return super.mobInteract(player, interactionHand);
         // TODO: Remove testing code
 
         player.sendSystemMessage(Component.literal("test"));
@@ -48,7 +48,7 @@ public class TurtleEntity extends LivingEntity implements IAnimatable {
         } else {
             this.turnRight();
         }
-        return super.interact(player, interactionHand);
+        return super.mobInteract(player, interactionHand);
     }
 
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> Event){
@@ -72,25 +72,6 @@ public class TurtleEntity extends LivingEntity implements IAnimatable {
                 0, this::predicate));
     }
 
-    @Override
-    protected void checkFallDamage(double p_20990_, boolean p_20991_, BlockState p_20992_, BlockPos p_20993_) {
-        // do nothing
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return null;
-    }
-
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot p_21127_) {
-        return null;
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot p_21036_, ItemStack p_21037_) {
-
-    }
 
 
     @Override
@@ -119,11 +100,6 @@ public class TurtleEntity extends LivingEntity implements IAnimatable {
         super.setYBodyRot(angle);
     }
 
-    @Override
-    public HumanoidArm getMainArm() {
-        return null;
-    }
-
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand interactionHand) {
@@ -145,16 +121,64 @@ public class TurtleEntity extends LivingEntity implements IAnimatable {
         return false;
     }
 
+    public boolean moveBackward(){
+        // see if the block is air
+        if (this.level.isEmptyBlock(this.blockPosition().relative(this.getMotionDirection().getOpposite()))) {
+            // move the entity forward 1 block
+
+            double x = this.getX() - this.getMotionDirection().getStepX();
+            double y = this.getY();
+            double z = this.getZ() - this.getMotionDirection().getStepZ();
+
+            this.setPos(x, y, z);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean moveUp(){
+        // see if the block is air
+        if (this.level.isEmptyBlock(this.blockPosition().above())) {
+            // move the entity forward 1 block
+
+            double x = this.getX();
+            double y = this.getY() + 1;
+            double z = this.getZ();
+
+            this.setPos(x, y, z);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean moveDown(){
+        // see if the block is air
+        if (this.level.isEmptyBlock(this.blockPosition().below())) {
+            // move the entity forward 1 block
+
+            double x = this.getX();
+            double y = this.getY() - 1;
+            double z = this.getZ();
+
+            this.setPos(x, y, z);
+            return true;
+        }
+        return false;
+    }
+
     public void turnRight(){
         // turn the entity right
-        setYRot(yBodyRot+90);
+        this.yBodyRot += 90;
+        this.yHeadRot += 90;
+        this.yRotO += 90;
 
     }
 
     public void turnLeft(){
         // turn the entity left 90 degrees
-        setYRot(yBodyRot-90);
-
+        this.yBodyRot -= 90;
+        this.yHeadRot -= 90;
+        this.yRotO -= 90;
     }
 
     // a function that makes the entity break the block in front of it
