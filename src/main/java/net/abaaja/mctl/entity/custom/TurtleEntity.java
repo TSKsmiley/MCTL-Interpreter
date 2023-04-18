@@ -100,8 +100,10 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand interactionHand) {
-        return super.interactAt(player, vec3, interactionHand);
+    public void setYRot(float rotation){
+        // round to closest 90 degree increment
+        float angle = Math.round(rotation / 90) * 90;
+        super.setYRot(angle);
     }
 
     public boolean moveForward(){
