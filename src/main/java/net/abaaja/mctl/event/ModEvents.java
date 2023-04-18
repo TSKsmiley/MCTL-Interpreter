@@ -1,16 +1,26 @@
 package net.abaaja.mctl.event;
 
 import net.abaaja.mctl.MCTL;
+import net.abaaja.mctl.command.ModCommands;
+import net.abaaja.mctl.command.commands.TestCommand;
 import net.abaaja.mctl.entity.ModEntityTypes;
 import net.abaaja.mctl.entity.custom.TurtleEntity;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.command.ConfigCommand;
 
 public class ModEvents {
     @Mod.EventBusSubscriber(modid = MCTL.MOD_ID)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onCommandRegister(RegisterCommandsEvent event) {
+            System.out.println("Registering commands");
+            ModCommands.register(event.getDispatcher());
 
+            ConfigCommand.register(event.getDispatcher());
+        }
     }
 
     @Mod.EventBusSubscriber(modid = MCTL.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)

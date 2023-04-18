@@ -12,15 +12,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import java.util.ArrayList;
 
 public class ModCommands {
-
-    public static ArrayList<Commands> COMMANDS = new ArrayList<>();
-
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher){
-        for (var command : COMMANDS) {
-            dispatcher.register(Commands.literal(MCTL.MOD_ID)
-                    .then(TestCommand.register()));
-        }
+        new TestCommand(dispatcher);
     }
-
-
 }

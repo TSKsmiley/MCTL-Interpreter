@@ -1,19 +1,21 @@
 package net.abaaja.mctl.command.commands;
 
-import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
 public class TestCommand {
-    public static ArgumentBuilder<CommandSourceStack, ?> register() {
-        return Commands.literal("test").executes(TestCommand::execute);
+
+    public TestCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("testburger")
+                .executes((context) -> run(context.getSource())));
     }
 
-    private static int execute(final CommandContext<CommandSourceStack> context) {
-        System.out.println("test command executed");
-        context.getSource().sendSuccess(Component.literal("test command executed"), false);
+    private static int run(CommandSourceStack source) throws CommandSyntaxException {
+        source.sendSuccess(Component.literal("test executed"), false);
+
         return 0;
     }
 }
