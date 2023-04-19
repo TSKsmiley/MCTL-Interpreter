@@ -23,9 +23,9 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, MCTL.MOD_ID);
 
-    public static final RegistryObject<TurtleBlock> Turtle = registerBlock("turtle", ()-> new TurtleBlock(BlockBehaviour.Properties
+/*    public static final RegistryObject<TurtleBlock> Turtle = registerBlock("turtle", ()-> new TurtleBlock(BlockBehaviour.Properties
             .of(Material.METAL)
-            .strength(3f)), ModCreativeModeTab.MCTL_TAB);
+            .strength(3f)), ModCreativeModeTab.MCTL_TAB);*/
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){

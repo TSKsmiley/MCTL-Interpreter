@@ -9,6 +9,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -18,11 +20,14 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+import java.util.concurrent.CompletableFuture;
+
 import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
 
 public class TurtleEntity extends Mob implements IAnimatable {
-    private AnimationFactory factory = createFactory(this);
+    private final AnimationFactory factory = createFactory(this);
     public TurtleEntity(EntityType<? extends Mob> entity, Level level) {
 
         super(entity, level);
@@ -42,9 +47,9 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
         player.sendSystemMessage(Component.literal("test"));
         if (player.isShiftKeyDown()){
-            this.turnLeft();
+            this.breakFront();
         } else {
-            this.turnRight();
+            this.placeFront(Blocks.DIRT);
         }
         return super.mobInteract(player, interactionHand);
     }
@@ -181,13 +186,42 @@ public class TurtleEntity extends Mob implements IAnimatable {
         this.yRotO -= 90;
     }
 
-    // a function that makes the entity break the block in front of it
-    public void breakBlockInFront() {
-        // get the block in front of the entity
+
+    public void breakFront() {
         BlockPos blockPos = this.blockPosition().relative(this.getMotionDirection());
-        // break the block
         this.level.destroyBlock(blockPos, true);
     }
 
+    public void breakUnder() {
+        BlockPos blockPos = this.blockPosition().below();
+        this.level.destroyBlock(blockPos, true);
+    }
 
+    public void breakAbove() {
+        BlockPos blockPos = this.blockPosition().above();
+        this.level.destroyBlock(blockPos, true);
+    }
+
+    public void placeFront(Block block) {
+        BlockPos blockPos = this.blockPosition().relative(this.getMotionDirection());
+        this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
+    }
+
+    public void placeUnder(Block block) {
+        BlockPos blockPos = this.blockPosition().below();
+        this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
+    }
+
+
+    public CompletableFuture<String> helloWorld() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                System.out.println("Hello");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+            return "World!";
+        });
+    }
 }
