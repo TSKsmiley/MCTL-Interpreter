@@ -2,7 +2,6 @@ package net.abaaja.mctl.event;
 
 import net.abaaja.mctl.MCTL;
 import net.abaaja.mctl.command.ModCommands;
-import net.abaaja.mctl.command.commands.TestCommand;
 import net.abaaja.mctl.entity.ModEntityTypes;
 import net.abaaja.mctl.entity.custom.TurtleEntity;
 import net.minecraftforge.event.RegisterCommandsEvent;

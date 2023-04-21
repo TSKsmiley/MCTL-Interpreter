@@ -63,6 +63,7 @@ public class TurtleEntity extends Mob implements IAnimatable {
         Event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.turtle.idle"));
         return PlayState.CONTINUE;
     }
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -213,15 +214,14 @@ public class TurtleEntity extends Mob implements IAnimatable {
     }
 
 
-    public CompletableFuture<String> helloWorld() {
+    public CompletableFuture<String> waitSafe(long time) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                System.out.println("Hello");
-                Thread.sleep(1000);
+                Thread.sleep(time);
             } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
+                e.printStackTrace();
             }
-            return "World!";
+            return "Done";
         });
     }
 }

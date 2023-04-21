@@ -7,19 +7,18 @@ import net.abaaja.mctl.entity.custom.TurtleEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 
-public class TestCommand {
+public class TurtleCommand {
 
-    public TestCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("testburger")
+    public TurtleCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("turtle")
                 .executes((context) -> run(context.getSource())));
     }
 
     private int run(CommandSourceStack source) throws CommandSyntaxException {
         if (source.getPlayer() == null)
             throw new CommandSyntaxException(null, Component.literal("Command can only be executed by a player!"));
-        source.sendSuccess(Component.literal("test executed"), false);
+        source.sendSuccess(Component.literal("test running"), false);
 
         TurtleEntity turtle = ModEntityTypes.TURTLE.get().create(source.getLevel());
 
@@ -31,8 +30,12 @@ public class TestCommand {
         turtle.moveForward();
         source.getLevel().addFreshEntity(turtle);
         TurtleEntity newTurtle = (TurtleEntity) source.getLevel().getEntity(turtle.getId());
-        // wait 10 ticks before moving
-        newTurtle.helloWorld();
+        newTurtle.moveForward();
+        newTurtle.turnLeft();
+        newTurtle.waitSafe(1000);
+        newTurtle.moveForward();
+        source.sendSuccess(Component.literal("test done"), false);
+
 
 
         return 0;

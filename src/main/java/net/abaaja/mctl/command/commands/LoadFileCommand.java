@@ -1,10 +1,14 @@
 package net.abaaja.mctl.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import org.antlr.runtime.ANTLRFileStream;
 import net.minecraft.network.chat.Component;
 
 import java.io.BufferedReader;
@@ -12,40 +16,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class LoadFileCommand {
+public class LoadFileCommand extends ICommand {
 
-    public LiteralArgumentBuilder<CommandSourceStack> commandName = Commands.literal("loadfile");
+    public LiteralArgumentBuilder<CommandSourceStack> commandName = Commands.literal("loadfile")
+            .then(Commands.argument("filename", StringArgumentType.string()));
 
     public LoadFileCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(commandName
-                .executes((context) -> run(context.getSource())));
+                .executes(this::run));
     }
 
-    private int run(CommandSourceStack source) throws CommandSyntaxException {
+    private int run(CommandContext<CommandSourceStack> source) throws CommandSyntaxException {
          // write contents of file to chat
-        source.sendSuccess(Component.literal("Reading file..."), false);
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("fileTest.txt");
-        try {
-            String data = readFromInputStream(inputStream);
+        sendChatFromFile(source.getSource(), StringArgumentType.getString(source, "filename"));
 
-            source.sendSuccess(Component.literal(data), false);
-        } catch (IOException e) {
-            source.sendFailure(Component.literal("Error reading file!"));
-        }
 
         return 0;
     }
 
-    private static String readFromInputStream(InputStream inputStream) throws IOException {
-        StringBuilder resultStringBuilder = new StringBuilder();
-        try (BufferedReader br
-                     = new BufferedReader(new InputStreamReader(inputStream))) {
+    public void sendChatFromFile(CommandSourceStack source, String filename){
+        try {
+            String userDir = System.getProperty("user.dir");
+            String completePath = userDir + "\\mctl-scripts\\" + filename + ".mctl";
+
+            InputStream is = getClass().getResourceAsStream("/"+ completePath);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = br.readLine()) != null) {
-                resultStringBuilder.append(line).append("\n");
+                source.sendSuccess(Component.literal(line), false);
             }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return resultStringBuilder.toString();
     }
+
 }
