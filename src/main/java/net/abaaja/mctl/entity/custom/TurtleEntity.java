@@ -213,15 +213,4 @@ public class TurtleEntity extends Mob implements IAnimatable {
         this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
     }
 
-
-    public CompletableFuture<String> waitSafe(long time) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(time);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return "Done";
-        });
-    }
 }
