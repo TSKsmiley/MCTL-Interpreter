@@ -9,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.abaaja.mctl.MCTL;
+import net.abaaja.mctl.command.getSuggestionsMCTL;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.antlr.runtime.ANTLRFileStream;
@@ -24,32 +25,14 @@ public class LoadFileCommand {
     public LoadFileCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("loadfile")
                 .then(Commands.argument("filename", StringArgumentType.string())
-                        .suggests(this::getSuggestions)
+                        .suggests(getSuggestionsMCTL::getSuggestions)
                     .executes(this::run)));
     }
 
-    private CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder){
-        String completePath = MCTL.FileLocation;
-        File folder = new File(completePath);
-        File[] listOfFiles = folder.listFiles();
-
-        if (listOfFiles == null) {
-            builder.suggest("No files found");
-            return builder.buildFuture();
-        }
-
-        for (File file : listOfFiles) {
-            if (file.isFile() && file.getName().endsWith(MCTL.FileExtension)) {
-                builder.suggest(file.getName().replace(MCTL.FileExtension, ""));
-            }
-        }
-        return builder.buildFuture();
-    }
-
-    private int run(CommandContext<CommandSourceStack> source) throws CommandSyntaxException {
+    private int run(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
          // write contents of file to chat
-        System.out.println("Loading file: " + StringArgumentType.getString(source, "filename"));
-        sendChatFromFile(source.getSource(), StringArgumentType.getString(source, "filename"));
+        System.out.println("Loading file: " + StringArgumentType.getString(ctx, "filename"));
+        sendChatFromFile(ctx.getSource(), StringArgumentType.getString(ctx, "filename"));
 
 
         return 0;
