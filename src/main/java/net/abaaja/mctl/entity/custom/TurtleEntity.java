@@ -21,8 +21,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.concurrent.CompletableFuture;
-
 import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
 

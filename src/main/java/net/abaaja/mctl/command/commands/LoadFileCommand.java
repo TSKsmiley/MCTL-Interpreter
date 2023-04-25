@@ -1,23 +1,16 @@
 package net.abaaja.mctl.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.abaaja.mctl.MCTL;
 import net.abaaja.mctl.command.getSuggestionsMCTL;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.antlr.runtime.ANTLRFileStream;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.concurrent.CompletableFuture;
 
 public class LoadFileCommand {
 
@@ -29,7 +22,7 @@ public class LoadFileCommand {
                     .executes(this::run)));
     }
 
-    private int run(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private int run(CommandContext<CommandSourceStack> ctx) {
          // write contents of file to chat
         System.out.println("Loading file: " + StringArgumentType.getString(ctx, "filename"));
         sendChatFromFile(ctx.getSource(), StringArgumentType.getString(ctx, "filename"));

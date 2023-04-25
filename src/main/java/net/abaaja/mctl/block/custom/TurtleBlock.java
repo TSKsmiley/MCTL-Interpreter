@@ -1,8 +1,6 @@
 package net.abaaja.mctl.block.custom;
 
-import net.abaaja.mctl.entity.custom.TurtleEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
