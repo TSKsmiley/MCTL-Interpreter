@@ -18,8 +18,8 @@ public class LoadFileCommand {
     public LoadFileCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("loadfile")
                 .then(Commands.argument("filename", StringArgumentType.string())
-                        .suggests(getSuggestionsMCTL::getSuggestions)
-                    .executes(this::run)));
+                    .suggests(getSuggestionsMCTL::getSuggestions)
+                .executes(this::run)));
     }
 
     private int run(CommandContext<CommandSourceStack> ctx) {
