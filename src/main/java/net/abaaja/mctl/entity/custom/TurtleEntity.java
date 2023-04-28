@@ -1,9 +1,11 @@
 package net.abaaja.mctl.entity.custom;
 
+import net.minecraft.client.gui.screens.social.PlayerEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,6 +28,10 @@ import static software.bernie.geckolib3.util.GeckoLibUtil.createFactory;
 
 public class TurtleEntity extends Mob implements IAnimatable {
     private final AnimationFactory factory = createFactory(this);
+
+    private Player playerDelete;
+    private int timerDelete = -1;
+
     public TurtleEntity(EntityType<? extends Mob> entity, Level level) {
 
         super(entity, level);
@@ -34,23 +40,10 @@ public class TurtleEntity extends Mob implements IAnimatable {
     public static AttributeSupplier setAttributes(){
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 99999D)
-                .add(Attributes.MOVEMENT_SPEED, .4f).build();
+                .add(Attributes.MOVEMENT_SPEED, .4f)
+                .build();
     }
 
-    @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
-        // skip custom logic if the player is not using the main hand
-        if (interactionHand != InteractionHand.MAIN_HAND) return super.mobInteract(player, interactionHand);
-        // TODO: Remove testing code
-
-        player.sendSystemMessage(Component.literal("test"));
-        if (player.isShiftKeyDown()){
-            this.breakFront();
-        } else {
-            this.placeFront(Blocks.DIRT);
-        }
-        return super.mobInteract(player, interactionHand);
-    }
 
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> Event){
         if (Event.isMoving()){
@@ -60,6 +53,24 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
         Event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.turtle.idle"));
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void baseTick() {
+        if(isCorrectPlayer() && isTimerActive()){
+            delete();
+        }
+
+        if (this.lastHurtByPlayer != null && !isTimerActive()){
+            lastHurtByPlayer.sendSystemMessage(Component.literal("Are you sure you want to stop this turtle?"));
+            playerDelete = lastHurtByPlayer;
+            startTimer(120);
+            lastHurtByPlayer = null;
+        }
+
+        timerTick();
+
+        super.baseTick();
     }
 
     @Override
@@ -108,6 +119,27 @@ public class TurtleEntity extends Mob implements IAnimatable {
         // round to closest 90 degree increment
         float angle = Math.round(rotation / 90) * 90;
         super.setYRot(angle);
+    }
+
+    private boolean isCorrectPlayer(){
+        return (lastHurtByPlayer != null && playerDelete == lastHurtByPlayer);
+    }
+
+    private void startTimer(int ticks){
+        timerDelete = ticks;
+    }
+
+    private boolean isTimerActive(){
+        return timerDelete != -1;
+    }
+
+    private void timerTick(){
+        if (timerDelete != -1)
+            timerDelete--;
+    }
+
+    private void delete(){
+        this.kill();
     }
 
     public boolean moveForward(){
@@ -210,5 +242,12 @@ public class TurtleEntity extends Mob implements IAnimatable {
         BlockPos blockPos = this.blockPosition().below();
         this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
     }
+
+    public void placeAbove(Block block) {
+        BlockPos blockPos = this.blockPosition().above();
+        this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
+    }
+
+
 
 }
