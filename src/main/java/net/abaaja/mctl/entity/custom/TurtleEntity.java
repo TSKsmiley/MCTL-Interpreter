@@ -1,11 +1,9 @@
 package net.abaaja.mctl.entity.custom;
 
-import net.minecraft.client.gui.screens.social.PlayerEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -44,6 +42,20 @@ public class TurtleEntity extends Mob implements IAnimatable {
                 .build();
     }
 
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
+        // skip custom logic if the player is not using the main hand
+        if (interactionHand != InteractionHand.MAIN_HAND) return super.mobInteract(player, interactionHand);
+        // TODO: Remove testing code
+
+        player.sendSystemMessage(Component.literal("test"));
+        if (player.isShiftKeyDown()){
+            player.sendSystemMessage(Component.literal(BlockFront().getName().toString()));
+        } else {
+            player.sendSystemMessage(Component.literal(BlockUnder().getName().toString()));
+        }
+        return super.mobInteract(player, interactionHand);
+    }
 
     private <T extends IAnimatable> PlayState predicate(AnimationEvent<T> Event){
         if (Event.isMoving()){
@@ -249,5 +261,23 @@ public class TurtleEntity extends Mob implements IAnimatable {
     }
 
 
+    public Block BlockFront(){
+        BlockPos pos = this.blockPosition().relative(this.getMotionDirection());
+        return this.level.getBlockState(pos).getBlock();
+    }
+
+    public Block BlockUnder(){
+        BlockPos pos = this.blockPosition().below();
+        return this.level.getBlockState(pos).getBlock();
+    }
+
+    public Block BlockAbove() {
+        BlockPos pos = this.blockPosition().above();
+        return this.level.getBlockState(pos).getBlock();
+    }
+
+    public boolean isBlockFront(Block block){
+        return BlockFront() == block;
+    }
 
 }
