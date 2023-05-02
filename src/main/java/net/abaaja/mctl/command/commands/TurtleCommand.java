@@ -36,6 +36,7 @@ public class TurtleCommand {
         TurtleEntity newTurtle = (TurtleEntity) source.getLevel().getEntity(turtle.getId());
         assert newTurtle != null;
         activeTurtle = newTurtle;
+        testThread(activeTurtle);
         source.sendSuccess(Component.literal("test done"), false);
 
         return 0;
@@ -53,5 +54,18 @@ public class TurtleCommand {
         source.sendSuccess(Component.literal("test done"), false);
 
         return 0;
+    }
+
+
+    private void testThread(TurtleEntity turtle){
+        new Thread(()->{
+            System.out.println("HELLO!!!");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            turtle.moveForward();
+        }).start();
     }
 }
