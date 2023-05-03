@@ -2,6 +2,7 @@ package net.abaaja.mctl.entity.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -10,9 +11,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -50,9 +51,9 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
         player.sendSystemMessage(Component.literal("test"));
         if (player.isShiftKeyDown()){
-            player.sendSystemMessage(Component.literal(BlockFront().getName().toString()));
+            placeFront("minecraft:water");
         } else {
-            player.sendSystemMessage(Component.literal(BlockUnder().getName().toString()));
+            placeFront(blockUnder());
         }
         return super.mobInteract(player, interactionHand);
     }
@@ -245,39 +246,46 @@ public class TurtleEntity extends Mob implements IAnimatable {
         this.level.destroyBlock(blockPos, true);
     }
 
-    public void placeFront(Block block) {
+    public void placeFront(String blockId) {
+        Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
         BlockPos blockPos = this.blockPosition().relative(this.getMotionDirection());
+        assert block != null;
         this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
     }
 
-    public void placeUnder(Block block) {
+    public void placeUnder(String blockId) {
+        Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
         BlockPos blockPos = this.blockPosition().below();
+        assert block != null;
         this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
     }
 
-    public void placeAbove(Block block) {
+    public void placeAbove(String blockId) {
+        Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
         BlockPos blockPos = this.blockPosition().above();
+        assert block != null;
         this.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
     }
 
 
-    public Block BlockFront(){
-        BlockPos pos = this.blockPosition().relative(this.getMotionDirection());
-        return this.level.getBlockState(pos).getBlock();
+    public String blockFront(){
+        return getBlockId(blockPosition().relative(this.getMotionDirection()));
     }
 
-    public Block BlockUnder(){
-        BlockPos pos = this.blockPosition().below();
-        return this.level.getBlockState(pos).getBlock();
+    public String blockUnder(){
+        return getBlockId(blockPosition().below());
     }
 
-    public Block BlockAbove() {
-        BlockPos pos = this.blockPosition().above();
-        return this.level.getBlockState(pos).getBlock();
+    public String blockAbove() {;
+        return getBlockId(blockPosition().above());
+    }
+
+    private String getBlockId(BlockPos pos){
+        return this.level.getBlockState(pos).getBlock().getDescriptionId();
     }
 
     public boolean isBlockFront(Block block){
-        return BlockFront() == block;
+        return blockFront().equals(block.getDescriptionId());
     }
 
 }
