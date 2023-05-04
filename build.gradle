@@ -8,6 +8,8 @@ version = '0.0.1-1.19'
 group = 'net.abaaja.mctl' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mctl'
 
+jarJar.enable()
+
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -131,7 +133,8 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19-41.1.0'
-    implementation files('libs/MCTL.jar')
+    jarJar files('libs/MCTL.jar')
+    implementation( files('libs/MCTL.jar'))
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.40')
 

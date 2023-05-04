@@ -3,11 +3,16 @@ package net.abaaja.mctl.command.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import dk.aau.p4.abaaja.MCTLInterpreter;
 import net.abaaja.mctl.MCTL;
 import net.abaaja.mctl.command.getSuggestionsMCTL;
+import net.abaaja.mctl.entity.ModEntityTypes;
+import net.abaaja.mctl.entity.custom.TurtleEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.abaaja.mctl.bridge.GameBridge;
+import org.antlr.v4.runtime.CharStream;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -39,18 +44,15 @@ public class LoadFileCommand {
             return;
         }
 
+        TurtleEntity turtle = spawnTurtle(source);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        try {
-            String line;
-            while ((line = br.readLine()) != null) {
-                source.sendSuccess(Component.literal(line), false);
-            }
-            br.close();
-        } catch (IOException e) {
-            source.sendFailure(Component.literal("Error reading file"));
-            e.printStackTrace();
-        }
+        testThread(turtle, is);
+    }
+
+    private TurtleEntity spawnTurtle(CommandSourceStack source){
+        TurtleEntity turtle = ModEntityTypes.TURTLE.get().create(source.getLevel());
+        source.getLevel().addFreshEntity(turtle);
+        return (TurtleEntity) source.getLevel().getEntity(turtle.getId());
     }
 
     @Nullable
@@ -58,6 +60,14 @@ public class LoadFileCommand {
         String completePath = MCTL.FileLocation + filename + MCTL.FileExtension;
 
         return getClass().getResourceAsStream("/"+ completePath);
+    }
+
+    private void testThread(TurtleEntity turtle, InputStream is){
+        new Thread(()->{
+            var bridge = new GameBridge(turtle);
+            var interp = new MCTLInterpreter(bridge);
+            interp.run((CharStream) is);
+        }).start();
     }
 
 }
