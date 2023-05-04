@@ -59,12 +59,6 @@ public class TurtleCommand {
 
     private void testThread(TurtleEntity turtle){
         new Thread(()->{
-            System.out.println("HELLO!!!");
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             turtle.moveForward();
         }).start();
     }
