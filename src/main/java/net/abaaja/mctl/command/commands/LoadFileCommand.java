@@ -64,8 +64,8 @@ public class LoadFileCommand {
 
     private void testThread(TurtleEntity turtle, InputStream is){
         new Thread(()->{
-            var bridge = new GameBridge(turtle);
-            var interp = new MCTLInterpreter(bridge);
+            //var bridge = new GameBridge(turtle);
+            var interp = new MCTLInterpreter(new GameBridge(turtle));
             interp.run((CharStream) is);
         }).start();
     }

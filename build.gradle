@@ -133,8 +133,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19-41.1.0'
-    jarJar files('libs/MCTL.jar')
-    implementation( files('libs/MCTL.jar'))
+    implementation 'dk.aau.p4.abaaja:mctl:1.19-1.0.0'
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.40')
 
