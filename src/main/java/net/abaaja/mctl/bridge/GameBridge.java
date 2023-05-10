@@ -108,6 +108,11 @@ public class GameBridge implements IGameBridge {
         return ret;
     }
 
+    @Override
+    public void internal_terminate() {
+        turtle.Terminate();
+    }
+
     private void sleep(int ms) {
         try {
             Thread.sleep(ms);

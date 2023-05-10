@@ -71,7 +71,7 @@ public class TurtleEntity extends Mob implements IAnimatable {
     @Override
     public void baseTick() {
         if(isCorrectPlayer() && isTimerActive()){
-            delete();
+            Terminate();
         }
 
         if (this.lastHurtByPlayer != null && !isTimerActive()){
@@ -151,7 +151,7 @@ public class TurtleEntity extends Mob implements IAnimatable {
             timerDelete--;
     }
 
-    private void delete(){
+    public void Terminate(){
         this.kill();
     }
 
@@ -281,8 +281,14 @@ public class TurtleEntity extends Mob implements IAnimatable {
     }
 
     private String getBlockId(BlockPos pos){
-        return this.level.getBlockState(pos).getBlock().getDescriptionId();
+        return getBlockIdString(this.level.getBlockState(pos).getBlock());
     }
+    private String getBlockIdString(Block block) {
+        ResourceLocation registryName = ForgeRegistries.BLOCKS.getKey(block);
+        assert registryName != null;
+        return registryName.toString();
+    }
+
 
     public boolean isBlockFront(Block block){
         return blockFront().equals(block.getDescriptionId());

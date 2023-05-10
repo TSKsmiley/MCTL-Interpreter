@@ -69,6 +69,7 @@ public class LoadFileCommand {
         assert turtle != null;
         turtle.setPos(blockToVec3(player.blockPosition()));
         turtle.setYRot(player.getYHeadRot());
+        turtle.moveForward(); // spawns the turtle in the correct position
         source.getLevel().addFreshEntity(turtle);
         return (TurtleEntity) source.getLevel().getEntity(turtle.getId());
     }
