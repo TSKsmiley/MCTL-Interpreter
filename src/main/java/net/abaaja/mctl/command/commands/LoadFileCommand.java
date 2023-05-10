@@ -10,9 +10,13 @@ import net.abaaja.mctl.entity.ModEntityTypes;
 import net.abaaja.mctl.entity.custom.TurtleEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.abaaja.mctl.bridge.GameBridge;
-import org.antlr.v4.runtime.CharStream;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import org.antlr.shadow.v4.runtime.CharStream;
+import org.antlr.shadow.v4.runtime.CharStreams;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -30,44 +34,67 @@ public class LoadFileCommand {
     private int run(CommandContext<CommandSourceStack> ctx) {
          // write contents of file to chat
         System.out.println("Loading file: " + StringArgumentType.getString(ctx, "filename"));
-        sendChatFromFile(ctx.getSource(), StringArgumentType.getString(ctx, "filename"));
+        PrepareAndRunScript(ctx.getSource(), StringArgumentType.getString(ctx, "filename"));
 
 
         return 0;
     }
 
-    public void sendChatFromFile(CommandSourceStack source, String filename){
-        InputStream is = GetFile(filename);
+    public void PrepareAndRunScript(CommandSourceStack source, String filename){
 
-        if (is == null) {
+        CharStream stream = null;
+        try {
+            stream = GetFile(filename);
+        } catch (IOException ignored) {}
+
+        if (stream == null) {
             source.sendFailure(Component.literal("File not found"));
             return;
         }
 
-        TurtleEntity turtle = spawnTurtle(source);
+        Player player = source.getPlayer();
 
-        testThread(turtle, is);
+        if(player == null) {
+            source.sendFailure(Component.literal("Command must be executed by player"));
+            return;
+        }
+
+        TurtleEntity turtle = spawnTurtle(source, player);
+
+        testThread(turtle, player, stream);
     }
 
-    private TurtleEntity spawnTurtle(CommandSourceStack source){
+    private TurtleEntity spawnTurtle(CommandSourceStack source, Player player){
         TurtleEntity turtle = ModEntityTypes.TURTLE.get().create(source.getLevel());
+        assert turtle != null;
+        turtle.setPos(blockToVec3(player.blockPosition()));
+        turtle.setYRot(player.getYHeadRot());
         source.getLevel().addFreshEntity(turtle);
         return (TurtleEntity) source.getLevel().getEntity(turtle.getId());
     }
 
-    @Nullable
-    public InputStream GetFile(String filename){
-        String completePath = MCTL.FileLocation + filename + MCTL.FileExtension;
-
-        return getClass().getResourceAsStream("/"+ completePath);
+    private Vec3 blockToVec3(BlockPos pos){
+        return new Vec3(pos.getX(),pos.getY(),pos.getZ());
     }
 
-    private void testThread(TurtleEntity turtle, InputStream is){
-        new Thread(()->{
+    @Nullable
+    public CharStream GetFile(String filename) throws IOException {
+        String completePath = MCTL.FileLocation + filename + MCTL.FileExtension;
+        var file = new File("/"+ completePath);
+        InputStream is = getClass().getResourceAsStream("/"+ completePath);
+        if (is == null) throw new IOException();
+        return CharStreams.fromStream(is);
+    }
+
+    private void testThread(TurtleEntity turtle, Player player, CharStream stream){
+        // this is in its own var to avoid being collected by the garbage collector
+        var thread = new Thread(()->{
+
             //var bridge = new GameBridge(turtle);
-            var interp = new MCTLInterpreter(new GameBridge(turtle));
-            interp.run((CharStream) is);
-        }).start();
+            var interp = new MCTLInterpreter(new GameBridge(turtle, player));
+            interp.run(stream);
+        });
+        thread.start();
     }
 
 }

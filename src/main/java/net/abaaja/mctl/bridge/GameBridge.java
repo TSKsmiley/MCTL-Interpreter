@@ -12,12 +12,18 @@ public class GameBridge implements IGameBridge {
     public int MoveDelay = 500;
     public int BlockInteractDelay = 500;
 
-    public GameBridge(TurtleEntity _turtle) {
+    public GameBridge(TurtleEntity _turtle, Player _player) {
         turtle = _turtle;
+        player = _player;
     }
 
     public void print(String s) {
         player.sendSystemMessage(Component.literal(s));
+    }
+
+    @Override
+    public String read() {
+        return "not implemented";
     }
 
     public boolean moveForward() {

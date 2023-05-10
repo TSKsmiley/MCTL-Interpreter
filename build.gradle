@@ -122,8 +122,8 @@ repositories {
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-    flatDir {
-       dir 'libs'
+    flatDir{
+        dirs 'libs'
     }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
@@ -133,7 +133,8 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19-41.1.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    minecraftLibrary 'dk.aau.p4.abaaja:MCTL:1.3-SNAPSHOT'
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.40')
 
