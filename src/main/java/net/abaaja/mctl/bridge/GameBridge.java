@@ -37,16 +37,18 @@ public class GameBridge implements IGameBridge {
     @Override
     public String read() {
         isReading = true;
-        String _readBuffer = "";
+        String _readBuffer = null;
         while (isReading) {
 
             if (!Objects.equals(readBuffer, "")){
                 _readBuffer = readBuffer;
+                readBuffer = "";
                 isReading = false;
             }
             
             sleep(100);
         }
+        assert _readBuffer != null;
         return _readBuffer;
     }
 
