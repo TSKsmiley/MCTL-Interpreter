@@ -159,11 +159,10 @@ public class TurtleEntity extends Mob implements IAnimatable {
         if (this.level.isEmptyBlock(this.blockPosition().relative(this.getMotionDirection()))) {
             // move the entity forward 1 block
 
-            double x = this.getX() + this.getMotionDirection().getStepX();
-            double y = this.getY();
-            double z = this.getZ() + this.getMotionDirection().getStepZ();
+            Vec3 step = new Vec3(this.getMotionDirection().step());
+            Vec3 pos = step.add(this.position());
 
-            this.setPos(x, y, z);
+            this.setPos(pos);
             return true;
         }
         return false;
@@ -174,11 +173,10 @@ public class TurtleEntity extends Mob implements IAnimatable {
         if (this.level.isEmptyBlock(this.blockPosition().relative(this.getMotionDirection().getOpposite()))) {
             // move the entity forward 1 block
 
-            double x = this.getX() - this.getMotionDirection().getStepX();
-            double y = this.getY();
-            double z = this.getZ() - this.getMotionDirection().getStepZ();
+            Vec3 step = new Vec3(this.getMotionDirection().step());
+            Vec3 pos = step.subtract(this.position());
 
-            this.setPos(x, y, z);
+            this.setPos(pos);
             return true;
         }
         return false;
