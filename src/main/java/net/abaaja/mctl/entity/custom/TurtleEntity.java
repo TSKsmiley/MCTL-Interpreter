@@ -32,7 +32,6 @@ public class TurtleEntity extends Mob implements IAnimatable {
     private int timerDelete = -1;
 
     public TurtleEntity(EntityType<? extends Mob> entity, Level level) {
-
         super(entity, level);
     }
 

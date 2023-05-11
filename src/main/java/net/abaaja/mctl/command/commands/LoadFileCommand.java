@@ -91,8 +91,11 @@ public class LoadFileCommand {
         // this is in its own var to avoid being collected by the garbage collector
         var thread = new Thread(()->{
 
-            //var bridge = new GameBridge(turtle);
             var interp = new MCTLInterpreter(new GameBridge(turtle, player));
+
+            // sleep 200 milliseconds
+            try { Thread.sleep(200); } catch (InterruptedException ignored) {}
+
             interp.run(stream);
         });
         thread.start();
