@@ -214,17 +214,17 @@ public class TurtleEntity extends Mob implements IAnimatable {
 
     public void turnRight(){
         // turn the entity right
-        this.yBodyRot += 90;
-        this.yHeadRot += 90;
-        this.yRotO += 90;
+        //this.setYBodyRot(this.yBodyRot + 90);
+        this.setYHeadRot(this.yHeadRot + 90);
+        this.setYRot(this.yRotO + 90);
 
     }
 
     public void turnLeft(){
         // turn the entity left 90 degrees
-        this.yBodyRot -= 90;
-        this.yHeadRot -= 90;
-        this.yRotO -= 90;
+        //this.setYBodyRot(this.yBodyRot - 90);
+        this.setYHeadRot(this.yHeadRot - 90);
+        this.setYRot(this.yRotO - 90);
     }
 
 
