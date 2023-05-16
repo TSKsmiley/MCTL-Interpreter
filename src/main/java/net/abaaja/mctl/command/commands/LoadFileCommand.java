@@ -20,6 +20,7 @@ import org.antlr.shadow.v4.runtime.CharStreams;
 
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.file.Path;
 
 public class LoadFileCommand {
 
@@ -42,9 +43,10 @@ public class LoadFileCommand {
 
     public void PrepareAndRunScript(CommandSourceStack source, String filename){
 
+        Path filePath = GetFile(filename);
         CharStream stream = null;
         try {
-            stream = GetFile(filename);
+            stream = CharStreams.fromPath(filePath);
         } catch (IOException ignored) {}
 
         if (stream == null) {
@@ -79,12 +81,10 @@ public class LoadFileCommand {
     }
 
     @Nullable
-    public CharStream GetFile(String filename) throws IOException {
+    public Path GetFile(String filename) {
         String completePath = MCTL.FileLocation + filename + MCTL.FileExtension;
         var file = new File("/"+ completePath);
-        InputStream is = getClass().getResourceAsStream("/"+ completePath);
-        if (is == null) throw new IOException();
-        return CharStreams.fromStream(is);
+        return file.toPath();
     }
 
     private void testThread(TurtleEntity turtle, Player player, CharStream stream){
