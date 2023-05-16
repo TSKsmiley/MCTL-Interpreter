@@ -174,7 +174,7 @@ public class TurtleEntity extends Mob implements IAnimatable {
             // move the entity forward 1 block
 
             Vec3 step = new Vec3(this.getMotionDirection().step());
-            Vec3 pos = step.subtract(this.position());
+            Vec3 pos = this.position().subtract(step);
 
             this.setPos(pos);
             return true;
