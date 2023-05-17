@@ -16,9 +16,10 @@ public class GameBridge implements IGameBridge {
 
     public TurtleEntity turtle;
     public Player player;
-    public int MoveDelay = 0;
-    public int BlockInteractDelay = 0;
-    public int RotateDelay = 100;
+    public int MoveDelay = 200;
+    public int BlockInteractDelay = 200;
+    public int RotateDelay = 200;
+    private int RotateMinDelay = 100; // If set to less than this, the mod breaks
 
     private Boolean isReading = false;
     private String readBuffer = "";
@@ -50,6 +51,13 @@ public class GameBridge implements IGameBridge {
         }
         assert _readBuffer != null;
         return _readBuffer;
+    }
+
+    @Override
+    public void setDelay(int delay) {
+        this.MoveDelay = delay;
+        this.BlockInteractDelay = delay;
+        this.RotateDelay = Math.max(delay, this.RotateMinDelay);
     }
 
     @Override
