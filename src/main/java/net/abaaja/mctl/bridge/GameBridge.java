@@ -62,28 +62,28 @@ public class GameBridge implements IGameBridge {
 
     @Override
     public boolean moveForward() {
-        var ret = turtle.moveForward();
+        boolean ret = turtle.moveForward();
         sleep(MoveDelay);
         return ret;
     }
 
     @Override
     public boolean moveUp() {
-        var ret = turtle.moveUp();
+        boolean ret = turtle.moveUp();
         sleep(MoveDelay);
         return ret;
     }
 
     @Override
     public boolean moveDown() {
-        var ret = turtle.moveDown();
+        boolean ret = turtle.moveDown();
         sleep(MoveDelay);
         return ret;
     }
 
     @Override
     public boolean moveBackward() {
-        var ret = turtle.moveBackward();
+        boolean ret = turtle.moveBackward();
         sleep(MoveDelay);
         return ret;
     }
@@ -138,21 +138,21 @@ public class GameBridge implements IGameBridge {
 
     @Override
     public String blockFront() {
-        var ret = turtle.blockFront();
+        String ret = turtle.blockFront();
         sleep(BlockInteractDelay);
         return ret;
     }
 
     @Override
     public String blockAbove() {
-        var ret = turtle.blockAbove();
+        String ret = turtle.blockAbove();
         sleep(BlockInteractDelay);
         return ret;
     }
 
     @Override
     public String blockUnder() {
-        var ret = turtle.blockUnder();
+        String ret = turtle.blockUnder();
         sleep(BlockInteractDelay);
         return ret;
     }
