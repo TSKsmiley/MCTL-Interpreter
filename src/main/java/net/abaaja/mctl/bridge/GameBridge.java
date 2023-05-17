@@ -16,9 +16,9 @@ public class GameBridge implements IGameBridge {
 
     public TurtleEntity turtle;
     public Player player;
-    public int MoveDelay = 500;
-    public int BlockInteractDelay = 500;
-    public int RotateDelay = 700;
+    public int MoveDelay = 0;
+    public int BlockInteractDelay = 0;
+    public int RotateDelay = 100;
 
     private Boolean isReading = false;
     private String readBuffer = "";
