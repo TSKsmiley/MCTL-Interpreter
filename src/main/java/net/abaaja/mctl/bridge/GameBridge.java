@@ -29,6 +29,10 @@ public class GameBridge implements IGameBridge {
         player = _player;
         gameBridges.add(this);
     }
+    public GameBridge(Player _player) {
+        player = _player;
+        gameBridges.add(this);
+    }
 
     @Override
     public void print(String s) {
@@ -160,7 +164,7 @@ public class GameBridge implements IGameBridge {
     @Override
     public void internal_terminate() {
         gameBridges.remove(this);
-        turtle.Terminate();
+        if(turtle != null) turtle.Terminate();
     }
 
     public void ChatMessage(String s, @Nullable Player _player) {
