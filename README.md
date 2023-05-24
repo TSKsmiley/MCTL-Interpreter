@@ -2,6 +2,8 @@
 MCTL is a beginner friendly programming language for a programmable turtle in Minecraft.
 It is intended for use in schools as a tool to to introduce students to the concept of programming.
 
+https://github.com/TSKsmiley/MCTL-Interpreter/assets/20535393/dd35a8a8-8b09-43e4-b951-03577844591a
+
 The student will write and run programs that control a turtle in a Minecraft world. The turtle can move around and build structures by placing blocks.
 
 We hope that the student will be more engaged and motivated to learn about programming, because it directly results in them being able to build sweet things in Minecraft.
